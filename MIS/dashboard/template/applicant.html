@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>Applicant Management</h3>
+
+<div class="card">
+    <a class="btn" href="#">Add Applicant</a>
+</div>
+
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Country</th>
+        <th>Status</th>
+    </tr>
+    {% for applicant in applicants %}
+    <tr>
+        <td>{{ applicant.firstName }} {{ applicant.lastname }}</td>
+        <td>{{ applicant.country }}</td>
+        <td>Pending</td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="3">No applicants found</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

@@ -1,0 +1,22 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>Maintenance</h3>
+
+<div class="card">
+    <h4>System Controls</h4>
+    <ul>
+        <li><a href="#">Company Maintenance</a></li>
+        <li><a href="#">User Management</a></li>
+        <li><a href="#">Activity Logs</a></li>
+    </ul>
+</div>
+
+{% if user.is_superuser %}
+<div class="card">
+    <h4>Admin Tools</h4>
+    <p>Database cleanup, backups, and audit logs.</p>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Maintenance</title>
+
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Adding User</h5>
+                </div>
+
+                <div class="card-body">
+
+
+
+                    {% if messages %}
+    {% for message in messages %}
+        <div class="alert 
+            {% if message.tags == 'error' %}alert-danger{% endif %}
+            {% if message.tags == 'success' %}alert-success{% endif %}
+            alert-dismissible fade show"
+            role="alert">
+
+            {{ message }}
+
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+
+                    <form method="POST" action ="{% url 'adduser' %}">
+                        {% csrf_token %}
+
+                        <!-- ===== CREDENTIALS ===== -->
+                        <h6 class="text-secondary mb-3">Login Credentials</h6>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Username</label>
+                                <input type="text" name="username" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Password</label>
+                                <input type="password" name="password" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <!-- ===== PERSONAL INFORMATION ===== -->
+                        <h6 class="text-secondary mb-3">Personal Information</h6>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label">First Name</label>
+                                <input type="text" name="fname" class="form-control" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Middle Name</label>
+                                <input type="text" name="mname" class="form-control">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" name="lname" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Birth Date</label>
+                                <input type="date" name="bday" class="form-control" required>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Sex</label>
+                                <select name="sex" class="form-select" required>
+                                    <option value="">-- Select --</option>
+                                    <option value="M">Male</option>
+                                    <option value="F">Female</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Contact No</label>
+                                <input type="text" name="contactNo" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Address</label>
+                            <textarea name="address" class="form-control" rows="3" required></textarea>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Department</label>
+                                <select name="dept" class="form-select">
+                                    <option value="">-- None --</option>
+                                    {% for d in departments %}
+                                        <option value="{{ d.id }}">{{ d }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <!-- ===== ROLES ===== -->
+                        <h6 class="text-secondary mb-3">User Roles</h6>
+
+                        <div class="row mb-4">
+                            <div class="col-md-4 form-check">
+                                <input class="form-check-input" type="checkbox" name="isAdmin" id="isAdmin">
+                                <label class="form-check-label" for="isAdmin">
+                                    Admin
+                                </label>
+                            </div>
+
+                            <div class="col-md-4 form-check">
+                                <input class="form-check-input" type="checkbox" name="isUser" id="isUser" checked>
+                                <label class="form-check-label" for="isUser">
+                                    User
+                                </label>
+                            </div>
+
+                            <div class="col-md-4 form-check">
+                                <input class="form-check-input" type="checkbox" name="isDeploy" id="isDeploy">
+                                <label class="form-check-label" for="isDeploy">
+                                    Deploy
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- ===== ACTIONS ===== -->
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-success px-4">
+                                Save User
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
