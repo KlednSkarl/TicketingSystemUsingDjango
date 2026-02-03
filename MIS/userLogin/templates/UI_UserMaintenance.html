@@ -3,11 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>User Configuration</title>
+
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-    <p> Bonjinggggg na posa
-        
-    </p>
+ 
+<body class="bg-light">
+
+<div class="container mt-5">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="fw-bold">User Configuration</h3>
+        <a href="{% url 'adduser' %}" class="btn btn-primary">Add User</a>
+    </div>
+
+    <!-- Card -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class ="row mb-3">
+                <div class="col-md-4 ms-auto">
+                    <input type="text" id="userSearch" class="form-control" placeholder="Search Users">
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle" id="userTable">
+                    <thead class="table-dark text-center">
+                        <tr>
+                            <th>First Name</th>
+                            <th>Middle Name</th>
+                            <th>Last Name</th>
+                            <th>Birthday</th>
+                            <th>Sex</th>
+                            <th>Address</th>
+                            <th>Contact No.</th>
+                            <th>Admin</th>
+                            <th>Deploy</th>
+                            <th>User</th>
+                            <th>Department</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for x in tblUsers %}
+                        <tr>
+                            <td>{{ x.fname }}</td>
+                            <td>{{ x.mname }}</td>
+                            <td>{{ x.lname }}</td>
+                            <td>{{ x.bday }}</td>
+                            <td class="text-center">{{ x.sex }}</td>
+                            <td>{{ x.address }}</td>
+                            <td>{{ x.contactNo }}</td>
+
+                            <!-- Admin Access -->
+                            <td class="text-center">
+                                {% if x.isAdmin %}
+                                    <span class="badge bg-success">Yes</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">No</span>
+                                {% endif %}
+                            </td>
+
+                            <!-- Deployment -->
+                            <td class="text-center">
+                                {% if x.isDeploy %}
+                                    <span class="badge bg-success">Yes</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">No</span>
+                                {% endif %}
+                            </td>
+
+                            <!-- User Access -->
+                            <td class="text-center">
+                                {% if x.isUser %}
+                                    <span class="badge bg-info">Yes</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">No</span>
+                                {% endif %}
+                            </td>
+
+                            <td>{{ x.dept }}</td>
+
+
+
+                            <!-- Actions -->
+                            <td class="text-center">
+
+
+                                <a href="{% url 'selectedUser' x.id %}"
+                                class="btn btn-sm btn-danger">
+                                    Update 
+                                </a>
+
+                                <a href="{% url 'deleteuser' x.id %}"
+                                   class="btn btn-sm btn-danger"
+                                   onclick="return confirm('Are you sure you want to delete this user?');">
+                                    Delete
+                                </a>
+
+
+                            </td>
+
+                          
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="12" class="text-center text-muted">
+                                No users found.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+
+                  <nav>
+                    <ul class ="pagination justify-content-center"> 
+                        {% if page_obj.has_previous %}
+                        <li class ="page-item">
+                            <a class="page-link" href ="?page={{ page_obj.previous_page_number }}">
+                                Previous
+                            </a>
+                        </li>
+                        {% endif %}
+
+                        {% for num in page_obj.paginator.page_range %}
+                        <li class ="page-item {% if page_obj.number == num %}active{% endif %}">
+                            <a class ="page-link" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                        {% endfor %}
+                        {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class ="page-link" href="?page={{ page_obj.next_page_number}}">
+                                Next</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+
+
+
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+    document.getElementById("userSearch").addEventListener("keyup",function (){
+        let value = this.value.toLowerCase();
+        let rows = document.querySelectorAll("#userTable tbody tr");
+
+        rows.forEach(row => {
+            row.style.display = row.innerText.toLowerCase().includes(value) ? "" : "none";
+        });
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

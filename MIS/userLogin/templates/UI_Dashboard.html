@@ -17,16 +17,45 @@
 <div class="container-fluid">
     <div class="row">
 
-        <!-- SIDEBAR -->
-        <nav class="col-md-3 col-lg-2 sidebar p-3">
-            <h4 class="mb-4">MIS Dashboard</h4>
+        <!-- SIDEBAR with Sub navigation-->
+<nav class="col-md-3 col-lg-2 sidebar p-3">
+    <h4 class="mb-4">MIS Dashboard</h4>
 
-            <a href="#" class="active"> Dashboard</a>
-            <a href="{% url 'userMaintenance' %}"> Maintenance</a>
-            <a href="{%url 'userAdding' %}"> User Adding</a>
-            <a href="{% url 'logout' %}"> Logout</a>
-            
-        </nav>
+    <!-- Main link -->
+    <a href="{% url 'DashBoard' %}" class="active d-block mb-2">
+        Dashboard
+    </a>
+
+    <!-- Parent menu -->
+    <a class="d-flex justify-content-between align-items-center mb-2"
+       data-bs-toggle="collapse"
+       href="#userSubMenu"
+       role="button"
+       aria-expanded="false"
+       aria-controls="userSubMenu">
+
+        User Maintenance
+        <span class="ms-2">▾</span>
+    </a>
+
+    <!-- Sub navigation -->
+    <div class="collapse ms-3" id="userSubMenu">
+        <a href="{% url 'userMaintenance' %}" class="d-block mb-1">
+            User List
+        </a>
+        <a href="{% url 'userAdding' %}" class="d-block mb-1">
+            Add User
+        </a>
+        <a href="{%url 'deptMaintenance' %}" class="d-block mb-1">
+            User Roles
+        </a>
+    </div>
+
+    <a href="{% url 'logout' %}" class="d-block mt-3 text-danger">
+        Logout
+    </a>
+</nav>
+
 
         <!-- MAIN CONTENT -->
         <main class="col-md-9 col-lg-10 content">
@@ -54,12 +83,12 @@
                 <div class="col-md-6 mb-3">
                     <div class="card shadow-sm">
                         <div class="card-body">
-                            <h5 class="card-title">User Adding</h5>
+                            <h5 class="card-title">Total Users</h5>
                             <p class="card-text">
-                                Add new users to the system.
+                                Count of Users Present.
                             </p>
-                            <a href="{%url 'userAdding' %}" class="btn btn-success">
-                                Go to User Adding
+                            <a class="btn btn-success">
+                                {{ user_count }}
                             </a>
                         </div>
                     </div>
@@ -70,6 +99,7 @@
 
     </div>
 </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

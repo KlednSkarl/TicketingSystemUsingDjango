@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Department Configuration</title>
+
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    
+</head>
+
+<body class="bg-light">
+
+
+
+{% if messages%}
+    {% for message in messages %}
+    <div class = "alert alert-{{ message.tags}} alert-dismissible fade show" role="alert">
+        {{message}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endfor %}
+{% endif %}
+
+
+
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  {% endfor %}
+{% endif %}
+
+
+<div class="container mt-5">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="fw-bold">Department Configuration</h3>
+        <button href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDeptModal">
+            Add Department
+        </button>
+
+
+
+
+        <!-- ==============start of Modal Add ================== -->
+        <div class="modal fade" id="addDeptModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form method="POST" action="{% url 'deptAdd' %}">
+            {% csrf_token %}
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Department</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="text"
+                           name="ET_deptToAdd"
+                           class="form-control"
+                           placeholder="Department Name"
+                           required>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">
+                        Save
+                    </button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+<!-- ============= End of Add modal ================== -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+
+    <!-- Card -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class ="row mb-3">
+                <div class="col-md-4 ms-auto">
+                    <input type="text" id="deptSearch" class="form-control" placeholder="Search Departments">
+                </div>
+            </div>
+
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle text-center" id="depTable">
+                    <thead class="table-dark">
+                        <tr>
+                            <th style="width: 20%;">Department ID</th>
+                            <th style="width: 40%;">Department Name</th>
+                            <th style="width: 40%;">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for x in dept_count %}
+                        <tr>
+                            <td>{{ x.id }}</td>
+                            <td>{{ x.dept }}</td>
+
+                            <!-- Actions -->
+                            <td>
+                                <div class="d-flex justify-content-center gap-2">
+                                    <a href="#"
+                                       class="btn btn-sm btn-warning"
+                                       data-bs-toggle="modal"
+                                    data-bs-target="#updateDeptModal{{ x.id }}">
+                                        Update
+                                    </a>
+
+
+                                    <div class="modal fade" id="updateDeptModal{{ x.id }}" tabindex="-1">
+                                        <div class="modal-dialog">
+                                            <form method="POST" action="{% url 'updateDeptData' x.id %}">
+                                                {% csrf_token %}
+                                                <div class="modal-content">
+                                    
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Update Department</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                    </div>
+                                    
+                                                    <div class="modal-body">
+                                                        <input type="text" name="ET_updateSelectedDepartment" class="form-control" value="{{ x.dept }}"
+                                                            required>
+                                                    </div>
+                                    
+                                                    <div class="modal-footer">
+                                                        <button type="submit" class="btn btn-warning">
+                                                            Update
+                                                        </button>
+                                                    </div>
+                                    
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+
+
+
+
+
+
+
+
+
+
+                                    <a href="{% url 'deptDelete' x.id %}"
+                                       class="btn btn-sm btn-danger"
+                                       onclick="return confirm('Are you sure you want to delete this department?');">
+                                        Delete
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3" class="text-center text-muted">
+                                No departments found.
+                            </td>
+                        </tr>
+
+
+                        
+
+
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+
+
+
+
+                    <!-- ======================= Start of Pagination Code=============== -->
+               
+                <nav>
+                    <ul class ="pagination justify-content-center"> 
+                        {% if dept_count.has_previous %}
+                        <li class ="page-item">
+                            <a class="page-link" href ="?page={{ dept_count.previous_page_number }}">
+                                Previous
+                            </a>
+                        </li>
+                        {% endif %}
+
+                        {% for num in dept_count.paginator.page_range %}
+                        <li class ="page-item {% if dept_count.number == num %}active{% endif %}">
+                            <a class ="page-link" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                        {% endfor %}
+                        {% if dept_count.has_next %}
+                        <li class="page-item">
+                            <a class ="page-link" href="?page={{ dept_count.next_page_number}}">
+                                Next</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+    document.getElementById("deptSearch").addEventListener("keyup",function (){
+        let value = this.value.toLowerCase();
+        let rows = document.querySelectorAll("#depTable tbody tr");
+
+        rows.forEach(row => {
+            row.style.display = row.innerText.toLowerCase().includes(value) ? "" : "none";
+        });
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

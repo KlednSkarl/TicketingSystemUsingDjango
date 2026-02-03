@@ -1,4 +1,5 @@
 from django.db import models
+#from userLogin import models
 
 # Create your models here.
 
@@ -12,10 +13,6 @@ class userCredentials(models.Model):
 
 
 # for user logins
-
-
-
-
 class TblAdmDepartment(models.Model):
     dept = models.CharField(max_length=100)
     def __str__(self):
