@@ -1,0 +1,110 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MIS | Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS --> 
+     <link rel="stylesheet" href="{% static 'userLogin/style.css' %}"> 
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <!-- SIDEBAR with Sub navigation-->
+<nav class="col-md-3 col-lg-2 sidebar p-3">
+    <h4 class="mb-4">Ticketing Dashboard</h4>
+
+    <!-- Main link -->
+    <a href="#" class="active d-block mb-2">
+        Dashboard
+    </a>
+
+    <!-- Parent menu -->
+    <a class="d-flex justify-content-between align-items-center mb-2"
+       data-bs-toggle="collapse"
+       href="#userSubMenu"
+       role="button"
+       aria-expanded="false"
+       aria-controls="userSubMenu">
+
+        Concerns
+        <span class="ms-2">▾</span>
+    </a>
+
+    <!-- Sub navigation -->
+    <div class="collapse ms-3" id="userSubMenu">
+        <a href="#" class="d-block mb-1">
+            File a Ticket
+        </a>
+        <a href="#" class="d-block mb-1">
+            My Account
+        </a>
+      
+    </div>
+
+ 
+
+       <a href="#" class="d-block mb-1">
+            History
+        </a>
+
+
+           <a href="#" class="d-block mt-3 text-danger">
+        Logout
+    </a>
+</nav>
+
+
+        <!-- MAIN CONTENT -->
+        <main class="col-md-9 col-lg-10 content">
+            <h2>Ticketing System </h2>
+            <p class="text-muted">
+                File, Respond, Success
+            </p>
+
+            <div class="row mt-4">
+
+                <div class="col-md-6 mb-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">My Tickets</h5>
+                            <p class="card-text">
+                                View Tickets
+                            </p>
+                            <a href="#" class="btn btn-primary">
+                                Tickets Collection
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Tickets Assigned to me</h5>
+                            <p class="card-text">
+                                Total Count
+                            </p>
+                            <a class="btn btn-success">
+                                {{ user_count }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+    </div>
+</div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
