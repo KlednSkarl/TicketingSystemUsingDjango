@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Ticket</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">Create New Ticket</h5>
+                </div>
+
+                <div class="card-body">
+                    <form method="POST" action="{% url 'create_ticket' %}">
+                        {% csrf_token %}
+
+                        <!-- Ticket Title -->
+                        <div class="mb-3">
+                            <label class="form-label">Ticket Title</label>
+                            <input type="text"
+                                   name="ticketTitle"
+                                   class="form-control"
+                                   required>
+                        </div>
+
+                        <!-- Ticket Severity -->
+                        <div class="mb-3">
+                            <label class="form-label">Severity</label>
+                            {{ form.ticketSeverity }}
+                        </div>
+
+                        <!-- Ticket Body -->
+                        <div class="mb-3">
+                            <label class="form-label">Concern / Description</label>
+                            <textarea name="ticketBody"
+                                      class="form-control"
+                                      rows="5"
+                                      required></textarea>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="#" class="btn btn-secondary">
+                                Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                Submit Ticket
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

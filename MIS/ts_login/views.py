@@ -1,8 +1,9 @@
 from django.shortcuts import render,redirect
 from userLogin.models import userCredentials
 from userLogin.models import Tbl_AdmUser
-
-
+from ts_login.models import Ticket
+from django.core.paginator import Paginator
+from .forms import TicketForm
 def UI_TicketSystem_Login(request):
     error =None
     if request.method=="POST":
@@ -44,9 +45,42 @@ def UI_TicketSystem_Dashboard(request):
     return render(request,'UI_TicketSystem_Dashboard.html')
 
 
- 
+def UI_showAllTicketCards(request):
+    ticketTable_count = Ticket.objects.all().order_by('id')
+    paginator= Paginator(ticketTable_count,5)
+    page_number = request.GET.get('page')
+
+
+    ticketTable = paginator.get_page(page_number)
+
+    return render(request,'UI_ticketCompilation.html',{'ticketTable':ticketTable})
+
+
 
  
+def create_ticket(request):
+    if request.method == 'POST':
+        form = TicketForm(request.POST)
+        if form.is_valid():
+            ticket = form.save(commit=False)
+
+            credentials = userCredentials.objects.get(
+                LI_userName=request.user.username
+            )
+            adm_user = Tbl_AdmUser.objects.get(credentials=credentials)
+
+            ticket.ticketAuthor = adm_user
+            ticket.save()   # ticketCode generated here ✅
+
+            return redirect('create_ticket')
+    else:
+        form = TicketForm()
+
+    return render(request, 'UI_CreateTicket.html', {'form': form})
+
+
+
+
 
 
 # Create your views here.

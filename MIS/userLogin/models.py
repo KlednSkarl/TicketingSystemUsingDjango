@@ -39,4 +39,7 @@ class Tbl_AdmUser(models.Model):
     isDeploy = models.BooleanField(default = False)
 
     dept = models.ForeignKey(TblAdmDepartment, on_delete=models.PROTECT, null= True, blank =True)
+
+    def __str__(self):
+        return f"{self.fname} {self.lname}"
 #for users lezgo

@@ -40,7 +40,7 @@
 
     <!-- Sub navigation -->
     <div class="collapse ms-3" id="userSubMenu">
-        <a href="#" class="d-block mb-1">
+        <a href="{% url 'create_ticket' %}" class="d-block mb-1">
             File a Ticket
         </a>
         <a href="#" class="d-block mb-1">
@@ -78,14 +78,14 @@
                             <p class="card-text">
                                 View Tickets
                             </p>
-                            <a href="#" class="btn btn-primary">
+                            <a href="{%url 'UI_showAllTicketCards' %}" class="btn btn-primary">
                                 Tickets Collection
                             </a>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-md-6 mb-3">
+                <!-- <div class="col-md-6 mb-3">
                     <div class="card shadow-sm">
                         <div class="card-body">
                             <h5 class="card-title">Tickets Assigned to me</h5>
@@ -97,7 +97,7 @@
                             </a>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
             </div>
         </main>

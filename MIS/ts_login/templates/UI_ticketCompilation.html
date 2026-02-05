@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <title>Ticket Table</title>
+</head>
+
+<body>
+    <div class="container mt-4">
+        <div class="row mb-3">
+            <div class="col-md-4 ms-auto">
+                <input type="text" id="ticketSearch" class="form-control" placeholder="Search Departments">
+            </div>
+        </div>
+        <table class="table table-hover align-middle" id="ticketTable">
+            <thead class="table-dark">
+                <tr>
+                    <th>Ticket ID </th>
+                    <th>Ticket Title</th>
+                    <th>Severity</th>
+                    <th>Ticket Code</th>
+                    <th>Ticket Author</th>
+                    <th>Assigned To</th>
+                    <th>Who Deployed</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for x in ticketTable %}
+                <tr style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#userModal" data-id="{{ x.id }}"
+                    data-name="{{ x.ticketTitle }}" data-dept="{{ x.dept }}" data-ticket-body="{{ x.ticketBody }}"
+                    data-ticket-author="{{x.ticketAuthor}}" data-ticket-timestamp="{{x.ticketCreatedAt}}"
+                    data-ticket-status="{{ x.ticketStatus }}" data-ticket-Updated="{{ x.ticketUpdatedAt }}"
+                    data-deploy="{{ x.isDeploy }}" data-user="{{ x.isUser }}">
+                    <td>{{ x.id }}</td>
+                    <td>{{ x.ticketTitle}} </td>
+                    <td>{{ x.ticketSeverity }}</td>
+                    <td>{{ x.ticketCode }}</td>
+                    <td>{{ x.ticketAuthor }}</td>
+                    <td>{{ x.ticketAssignedTo }}</td>
+                    <td>{{ x.ticketDeployer }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center text-muted">
+                        No records found
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+    <!-- Above is the div for the table -->
+
+
+
+    <div class="modal fade" id="userModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalName"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <p><strong>Concern:</strong> <span id="modalTicketBody"></span></p>
+                            <p><strong>By:</strong> <span id="modalTicketAuthor"></span></p>
+                            <p><strong>Date/Time Issued:</strong> <span id="modalTimeStamp"></span></p>
+                            <p><strong>Ticket Status: </strong> <span id="modalticketStatus"></span></p>
+                            <p><strong>Ticket Last Update: </strong> <span id="modalticketUpdated"></span></p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- above is the code for the modal  -->
+
+
+    <nav>
+        <ul class="pagination justify-content-center">
+            {% if ticketTable.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ ticketTable.previous_page_number }}">
+                    Previous
+                </a>
+            </li>
+            {% endif %}
+
+            {% for num in ticketTable.paginator.page_range %}
+            <li class="page-item {% if ticketTable.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+            {% if ticketTable.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ ticketTabledept_count.next_page_number}}">
+                    Next</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+
+
+
+
+
+
+
+    <script>
+        const modal = document.getElementById('userModal')
+
+        modal.addEventListener('show.bs.modal', function (event) {
+            const row = event.relatedTarget
+
+            document.getElementById('modalName').innerText = row.dataset.name
+            document.getElementById('modalTicketBody').innerText = row.dataset.ticketBody
+            document.getElementById('modalTicketAuthor').innerText = row.dataset.ticketAuthor
+            document.getElementById('modalTimeStamp').innerText = row.dataset.ticketTimestamp
+            document.getElementById('modalticketStatus').innerText = row.dataset.ticketStatus
+            document.getElementById('modalticketUpdated').innerText = row.dataset.ticketUpdated
+        });
+
+        document.getElementById("ticketSearch").addEventListener("keyup", function () {
+            let value = this.value.toLowerCase();
+            let rows = document.querySelectorAll("#ticketTable tbody tr");
+
+            rows.forEach(row => {
+                row.style.display = row.innerText.toLowerCase().includes(value) ? "" : "none";
+            });
+        });
+
+
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
