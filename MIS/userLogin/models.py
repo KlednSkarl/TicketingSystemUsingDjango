@@ -1,10 +1,12 @@
 from django.db import models
 from django.contrib.auth.hashers import make_password, check_password
+ 
 #from userLogin import models
 
 # Create your models here.
 
 class userCredentials(models.Model):
+     
     LI_userID = models.CharField(max_length=100)
     LI_userName = models.CharField(max_length=100)
     LI_passWord = models.CharField(max_length=255)

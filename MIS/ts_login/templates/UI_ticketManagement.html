@@ -11,11 +11,14 @@
 
 <body>
     <div class="container mt-4">
-        <div class="row mb-3">
-            <div class="col-md-4 ms-auto">
+        <div class="row mb-2">
+            <div class="col-md-3 ms-auto">
                 <input type="text" id="ticketSearch" class="form-control" placeholder="Search Departments">
+
             </div>
+
         </div>
+
         <table class="table table-hover align-middle" id="ticketTable">
             <thead class="table-dark">
                 <tr>
@@ -31,11 +34,12 @@
 
             <tbody>
                 {% for x in ticketTable %}
-                <tr style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#userModal" data-id="{{ x.id }}" class="{{ x.status_class }}"
-                    data-name="{{ x.ticketTitle }}" data-dept="{{ x.dept }}" data-ticket-body="{{ x.ticketBody }}"
-                    data-ticket-author="{{x.ticketAuthor}}" data-ticket-timestamp="{{x.ticketCreatedAt}}"
-                    data-ticket-status="{{ x.ticketStatus }}" data-ticket-Updated="{{ x.ticketUpdatedAt }}"
-                    data-deploy="{{ x.isDeploy }}" data-user="{{ x.isUser }}">
+                <tr style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#userModal" data-id="{{ x.id }}"
+                    class="{{ x.status_class }}" data-name="{{ x.ticketTitle }}" data-dept="{{ x.dept }}"
+                    data-ticket-body="{{ x.ticketBody }}" data-ticket-author="{{x.ticketAuthor}}"
+                    data-ticket-timestamp="{{x.ticketCreatedAt}}" data-ticket-status="{{ x.ticketStatus }}"
+                    data-ticket-Updated="{{ x.ticketUpdatedAt }}" data-deploy="{{ x.isDeploy }}"
+                    data-is-admin="{{ x.ticketAuthor.isAdmin|lower }}">
                     <td>{{ x.id }}</td>
                     <td>{{ x.ticketTitle}} </td>
                     <td>{{ x.ticketSeverity }}</td>
@@ -43,7 +47,7 @@
                     <td>{{ x.ticketAuthor }}</td>
                     <td>{{ x.ticketAssignedTo }}</td>
                     <td>{{ x.ticketDeployer }}</td>
-                     
+
                 </tr>
                 {% empty %}
                 <tr>
@@ -81,12 +85,78 @@
                         </div>
                     </div>
 
+                    <div id="adminSection" class="card mt-3 d-none border-danger">
+                        <div class="card-body">
+                            <h6 class="text-danger">Admin Controls</h6>
+
+                            <form method="POST" action="{% url 'update_ticket' %}">
+                                {% csrf_token %}
+
+                                <!-- IMPORTANT: ticket id -->
+                                <input type="hidden" name="ticket_id" id="modalTicketId">
+
+                                <select class="form-select mb-2" name="assigned_to">
+                                    <option value="">Select Employee to Deploy</option>
+                                    {% for EMPdeploy in forDeploy %}
+                                    <option value="{{ EMPdeploy.id }}">{{ EMPdeploy }}</option>
+                                    {% endfor %}
+                                </select>
+
+                                <select class="form-select mb-2" name="deployed_by">
+                                    <option value="">Select Who Deployed</option>
+                                    {% for EmpAdmin in forAdmin %}
+                                    <option value="{{ EmpAdmin.id }}">{{ EmpAdmin }}</option>
+                                    {% endfor %}
+                                </select>
+
+                                <select class="form-select mb-2" name="ticket_status">
+                                    <option value="">Select Status of Ticket</option>
+                                    {% for value, label in status_choices %}
+                                    <option value="{{ value }}">{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+
+                                <button type="submit" class="btn btn-danger w-100">
+                                    Update Ticket
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- Above is an on click for the admin section only -->
+
+
+
+                    <div id="deploySection" class="card mt-3 d-none border-danger">
+
+                        <div class="card-body">
+                            <h6 class="text-danger">Deploy Controls</h6>
+
+                            <select class="form-select mb-2">
+                                <option></option>
+                            </select>
+
+                            <select class="form-select mb-2">
+                                <option>Deployed By</option>
+                            </select>
+
+                            <button class="btn btn-danger w-100">Update Ticket</button>
+                        </div>
+                    </div>
+                    <!-- Above is an on click for the is Deploy section only -->
+
+
+
+
                 </div>
 
             </div>
         </div>
     </div>
-    <!-- above is the code for the modal  -->
+    <!-- above is the code for the modal on click  -->
+
+
+
+
 
 
     <nav>
@@ -114,7 +184,7 @@
     </nav>
 
 
-
+    <!-- Code above is for pagination  -->
 
 
 
@@ -124,6 +194,7 @@
 
         modal.addEventListener('show.bs.modal', function (event) {
             const row = event.relatedTarget
+            const adminSection = document.getElementById('adminSection')
 
             document.getElementById('modalName').innerText = row.dataset.name
             document.getElementById('modalTicketBody').innerText = row.dataset.ticketBody
@@ -131,19 +202,29 @@
             document.getElementById('modalTimeStamp').innerText = row.dataset.ticketTimestamp
             document.getElementById('modalticketStatus').innerText = row.dataset.ticketStatus
             document.getElementById('modalticketUpdated').innerText = row.dataset.ticketUpdated
-        });
+
+            document.getElementById('modalTicketId').value = row.dataset.id
+            if (!adminSection) return
+
+            adminSection.classList.add('d-none')
+
+            const isAdmin = "{{ is_admin|yesno:'true,false' }}" === "true"
+
+            if (isAdmin) {
+                adminSection.classList.remove('d-none')
+            }
+
+            console.log("Logged-in user isAdmin:", isAdmin)
+        })
 
         document.getElementById("ticketSearch").addEventListener("keyup", function () {
-            let value = this.value.toLowerCase();
-            let rows = document.querySelectorAll("#ticketTable tbody tr");
+            let value = this.value.toLowerCase()
+            let rows = document.querySelectorAll("#ticketTable tbody tr")
 
             rows.forEach(row => {
-                row.style.display = row.innerText.toLowerCase().includes(value) ? "" : "none";
-            });
-        });
-
-
-
+                row.style.display = row.innerText.toLowerCase().includes(value) ? "" : "none"
+            })
+        })
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 

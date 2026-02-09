@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.hashers import make_password 
 from .models import (Tbl_AdmUser,TblAdmDepartment,userCredentials)
 from django.core.paginator import Paginator
+from django.contrib.auth.hashers import check_password
 from django.db.models.deletion import ProtectedError
 import uuid
 
@@ -85,12 +86,14 @@ def UI_userLogin(request):
         password = request.POST.get('password')
         try:
             user=userCredentials.objects.get(
-                LI_userName = username,
-                LI_passWord = password    
+                LI_userName = username    
                 )
-            request.session['LI_userID'] = user.LI_userID
-            request.session['LI_userName'] = user.LI_userName
-            return redirect('DashBoard')
+            if check_password(password,user.LI_passWord):
+                request.session['LI_userID'] = user.LI_userID
+                request.session['LI_userName'] = user.LI_userName
+                return redirect('DashBoard')
+            else:
+                error = "Invalid password"  
         
         except  userCredentials.DoesNotExist:
             error = "Invalid username and password"

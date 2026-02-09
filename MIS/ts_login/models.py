@@ -82,4 +82,13 @@ class Ticket(models.Model):
             self.ticketCode = Ticket.generateNewTicketCode()
         super().save(*args,**kwargs)
 
+    def status_class(self):
+        return {
+        'OPEN': 'table-primary',
+        'IN_PROGRESS': 'table-warning',
+        'RESOLVED': 'table-success',
+        'CLOSED': 'table-secondary',
+        'REJECTED': 'table-danger',
+    }.get(self.ticketStatus, '')
+
 # Create your models here.
